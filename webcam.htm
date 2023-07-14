@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Display Webcam Stream</title>
 
-    <style>
-        h1{
+    <style type="text/css">
+        button {
+            width:120px;
+            padding:10px;
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #111111;
+            cursor: pointer;
+            background-color: white;
+        }
+        h1 {
             font-family:sans-serif;
             color:#333;
         }
@@ -15,27 +24,37 @@
         }
         #container {
             margin: 0px auto;
-            width: 500px;
-            height: 375px;
+            width: 265px;
+            height: 200px;
             border: 10px #333 solid;
         }
-        #videoElement {
-            width: 500px;
-            height: 375px;
+        #video {
+            width: 265px;
+            height: 200px;
             background-color: #666;;
         }
+        #canvas {
+            margin: 0 auto 20px auto;
+            display: block
+        }
+
     </style>
 </head>
 <body>
     <h1>Display Webcam Stream</h1>
     <div id="container">
-       <video autoplay="true" id="videoElement">
+       <video autoplay="true" id="video"></video> 
 
-       </video> 
+       <button id="click-photo">Click Photo</button>
+
+       <canvas id="canvas" width="265" height="200"></canvas>
+
     </div>
 
     <script>
-        let video = document.querySelector("#videoElement");
+        let video = document.querySelector("#video");
+        let click_button = document.querySelector("#click-photo");
+        let canvas = document.querySelector("#canvas");
 
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
@@ -43,12 +62,20 @@
                     video.srcObject = stream;
                 })
                 .catch (function (error) {
-                    console.logo("Something went wrong!")
+                    console.log("Something went wrong!")
                 })
                 
             } else {
             console.log("getUserMedia not supported!");
         }
+
+        click_button.addEventListener('click', function() {
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            let image_data_url = canvas.toDataURL('image/jpeg');
+
+            console.log(image_data_url)
+        });
+
     </script>
     
 </body>
